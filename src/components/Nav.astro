@@ -1,0 +1,41 @@
+---
+import { NAV_ITEMS } from "../data/nav";
+
+const currentPath = Astro.url.pathname;
+---
+
+<nav class="nav">
+  <div class="nav-inner container">
+    <span class="nav-brand">RB_/portfolio</span>
+    <ul class="nav-links">
+      {
+        NAV_ITEMS.map((item) =>
+          item.href ? (
+            <li>
+              <a
+                href={item.href}
+                class={
+                  item.href === "/"
+                    ? currentPath === "/"
+                      ? "active"
+                      : ""
+                    : currentPath.startsWith(item.href)
+                      ? "active"
+                      : ""
+                }
+              >
+                {item.label}
+              </a>
+            </li>
+          ) : (
+            <li>
+              <span class="disabled" title="Page à venir">
+                {item.label}
+              </span>
+            </li>
+          )
+        )
+      }
+    </ul>
+  </div>
+</nav>

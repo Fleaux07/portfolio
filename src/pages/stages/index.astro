@@ -1,0 +1,28 @@
+---
+import Layout from "../../layouts/Layout.astro";
+import BriefcaseIcon from "../../components/icons/BriefcaseIcon.astro";
+import { STAGES } from "../../data/stages";
+---
+
+<Layout title="Stages" description="Les stages effectués par Romain Boucourt pendant son BTS SIO SLAM.">
+  <section class="section">
+    <div class="container">
+      <span class="section-label mono">Stages</span>
+      <h2>Mes stages</h2>
+      <div class="card-grid">
+        {
+          STAGES.map((stage) => (
+            <a href={`/stages/${stage.slug}`} class="link-card">
+              <span class="icon-frame">
+                <BriefcaseIcon />
+              </span>
+              <h3>{stage.title}</h3>
+              <span class="card-date">{stage.date}</span>
+              <span class="card-cta">Voir la fiche →</span>
+            </a>
+          ))
+        }
+      </div>
+    </div>
+  </section>
+</Layout>

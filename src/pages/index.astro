@@ -1,0 +1,82 @@
+---
+import Layout from "../layouts/Layout.astro";
+import GithubIcon from "../components/icons/GithubIcon.astro";
+import LinkedinIcon from "../components/icons/LinkedinIcon.astro";
+import { PROFILE, EXPERIENCES, SKILLS, EDUCATIONS } from "../data/home";
+---
+
+<Layout title="Accueil">
+  <section class="hero">
+    <div class="hero-aurora"></div>
+    <div class="hero-content">
+      <h1>{PROFILE.name}</h1>
+      <p class="subtitle">
+        <strong>{PROFILE.title}</strong><br />
+        {PROFILE.titleFull}
+      </p>
+      <div class="social-links">
+        <a href={PROFILE.github} target="_blank" rel="noopener noreferrer" aria-label="GitHub">
+          <GithubIcon />
+        </a>
+        <a href={PROFILE.linkedin} target="_blank" rel="noopener noreferrer" aria-label="LinkedIn">
+          <LinkedinIcon />
+        </a>
+      </div>
+    </div>
+  </section>
+
+  <section class="section">
+    <div class="container">
+      <span class="section-label mono">Expériences</span>
+      <h2>Parcours professionnel</h2>
+      <div class="timeline">
+        {
+          EXPERIENCES.map((exp) => (
+            <div class="timeline-item">
+              <span class="timeline-date">{exp.date}</span>
+              <span class="timeline-title">{exp.title}</span>
+            </div>
+          ))
+        }
+      </div>
+    </div>
+  </section>
+
+  <section class="section tinted">
+    <div class="container">
+      <span class="section-label mono">Compétences</span>
+      <h2>Skills</h2>
+      <div class="skills-grid">
+        {
+          SKILLS.map((group) => (
+            <div class="skill-card">
+              <h3>{group.name}</h3>
+              <div class="tag-list">
+                {group.skills.map((skill) => (
+                  <span class="tag">{skill}</span>
+                ))}
+              </div>
+            </div>
+          ))
+        }
+      </div>
+    </div>
+  </section>
+
+  <section class="section">
+    <div class="container">
+      <span class="section-label mono">Formations</span>
+      <h2>Parcours scolaire</h2>
+      <div class="timeline">
+        {
+          EDUCATIONS.map((edu) => (
+            <div class="timeline-item">
+              <span class="timeline-date">{edu.date}</span>
+              <span class="timeline-title">{edu.title}</span>
+            </div>
+          ))
+        }
+      </div>
+    </div>
+  </section>
+</Layout>
