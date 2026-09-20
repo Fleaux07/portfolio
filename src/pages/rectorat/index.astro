@@ -1,0 +1,27 @@
+---
+import Layout from "../../layouts/Layout.astro";
+import DocumentIcon from "../../components/icons/DocumentIcon.astro";
+import { RECTORAT_DOCUMENTS } from "../../data/rectorat";
+---
+
+<Layout title="Rectorat" description="Documents administratifs du BTS SIO SLAM de Romain Boucourt.">
+  <section class="section">
+    <div class="container">
+      <span class="section-label mono">Rectorat</span>
+      <h2>Documents administratifs</h2>
+      <div class="card-grid">
+        {
+          RECTORAT_DOCUMENTS.map((doc) => (
+            <a href={doc.href} target="_blank" rel="noopener noreferrer" class="link-card">
+              <span class="icon-frame">
+                <DocumentIcon />
+              </span>
+              <h3>{doc.title}</h3>
+              <span class="card-cta">Ouvrir le document ↗</span>
+            </a>
+          ))
+        }
+      </div>
+    </div>
+  </section>
+</Layout>

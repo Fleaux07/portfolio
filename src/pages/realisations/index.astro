@@ -1,0 +1,48 @@
+---
+import Layout from "../../layouts/Layout.astro";
+import { REALISATIONS } from "../../data/realisations";
+---
+
+<Layout title="Réalisations" description="Projets personnels et scolaires réalisés par Romain Boucourt pendant son BTS SIO SLAM.">
+  <section class="section">
+    <div class="container">
+      <div class="page-header">
+        <span class="section-label mono">Réalisations</span>
+        <h2>Mes réalisations</h2>
+      </div>
+
+      {
+        REALISATIONS.length === 0 ? (
+          <div class="placeholder-box">
+            <p class="mono">Aucune réalisation pour le moment — à compléter.</p>
+          </div>
+        ) : (
+          <div class="card-grid">
+            {REALISATIONS.map((item) => {
+              const Tag = item.href ? "a" : "div";
+              return (
+                <Tag
+                  href={item.href}
+                  target={item.href ? "_blank" : undefined}
+                  rel={item.href ? "noopener noreferrer" : undefined}
+                  class="link-card"
+                >
+                  {item.tags && item.tags.length > 0 && (
+                    <div class="tag-list" style="margin-bottom: 12px;">
+                      {item.tags.map((tag) => (
+                        <span class="tag">{tag}</span>
+                      ))}
+                    </div>
+                  )}
+                  <h3>{item.title}</h3>
+                  <span class="card-summary">{item.description}</span>
+                  {item.href && <span class="card-cta">Voir le projet ↗</span>}
+                </Tag>
+              );
+            })}
+          </div>
+        )
+      }
+    </div>
+  </section>
+</Layout>
