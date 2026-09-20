@@ -2,6 +2,7 @@
 import Layout from "../../layouts/Layout.astro";
 import BriefcaseIcon from "../../components/icons/BriefcaseIcon.astro";
 import { STAGES } from "../../data/stages";
+import { withBase } from "../../lib/url";
 ---
 
 <Layout title="Stages" description="Les stages effectués par Romain Boucourt pendant son BTS SIO SLAM.">
@@ -12,7 +13,7 @@ import { STAGES } from "../../data/stages";
       <div class="card-grid">
         {
           STAGES.map((stage) => (
-            <a href={`/stages/${stage.slug}`} class="link-card">
+            <a href={withBase(`/stages/${stage.slug}`)} class="link-card">
               <span class="icon-frame">
                 <BriefcaseIcon />
               </span>

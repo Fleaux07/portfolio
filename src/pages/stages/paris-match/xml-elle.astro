@@ -1,0 +1,67 @@
+---
+import Layout from "../../../layouts/Layout.astro";
+import { withBase } from "../../../lib/url";
+---
+
+<Layout title="Traitement XML Elle — Stage Paris Match" description="Correction automatique d'une balise XML vide sur les magazines Elle, pendant le stage chez Paris Match.">
+  <section class="section">
+    <div class="container">
+      <a href={withBase("/stages/paris-match")} class="breadcrumb">← Retour au stage Paris Match</a>
+      <div class="page-header">
+        <span class="section-label mono">Mission — Paris Match</span>
+        <h2>Traitement de XML défectueux pour Elle</h2>
+      </div>
+
+      <div class="prose">
+        <p>
+          Le magazine « Elle » était auparavant dans le même groupe que Paris Match (Lagardère). Certaines choses
+          restent donc encore sous-traitées chez Paris Match. Les magazines d'Elle sont organisés sous la forme de
+          fichiers zip, contenant ensuite un fichier XML par article présent dans le magazine.
+        </p>
+        <p>
+          Dans ce cas précis, certains XML avaient une balise vide : la balise <strong>« onCoverDate »</strong>, qui
+          correspond à la date de couverture du magazine. Cette balise étant vide, le fichier zip des XML ne
+          pouvait pas être mis sur le serveur. Or la date à renseigner est la même qu'une autre balise, elle bien
+          renseignée : <strong>« publicationDate »</strong>. Les deux dates sont par ailleurs au même format
+          (AAAA-MM-JJ).
+        </p>
+        <p>
+          J'ai donc réalisé un script Python qui renseigne automatiquement la balise « onCoverDate » à l'aide de la
+          balise « publicationDate ».
+        </p>
+      </div>
+
+      <figure class="stage-figure">
+        <img src={withBase("/images/stages/paris-match/elle-xml-balise-vide.jpg")} alt="Extrait XML avec balise onCoverDate vide" loading="lazy" />
+        <figcaption>
+          Extrait d'un fichier XML avant traitement — la balise renseignée (publicationDate) est surlignée, la
+          balise vide (onCoverDate) se trouve juste en dessous.
+        </figcaption>
+      </figure>
+
+      <div class="prose">
+        <p>
+          Une fenêtre pop-up explique le traitement effectué, avec une zone de logs permettant de voir son
+          déroulement en détail. Voici le code source du script Python, et une capture d'écran d'un traitement
+          réalisé sur un échantillon.
+        </p>
+      </div>
+
+      <div class="stage-figure-row">
+        <figure class="stage-figure">
+          <img src={withBase("/images/stages/paris-match/elle-code-1.jpg")} alt="Code source du script de correction XML (1/2)" loading="lazy" />
+          <figcaption>Script de correction — lecture des fichiers et détection de la balise à corriger.</figcaption>
+        </figure>
+        <figure class="stage-figure">
+          <img src={withBase("/images/stages/paris-match/elle-code-2.jpg")} alt="Code source du script de correction XML (2/2)" loading="lazy" />
+          <figcaption>Script de correction — remplacement de la balise vide et enregistrement du fichier.</figcaption>
+        </figure>
+      </div>
+
+      <figure class="stage-figure">
+        <img src={withBase("/images/stages/paris-match/elle-terminal-resultat.jpg")} alt="Résultat du script dans le terminal" loading="lazy" />
+        <figcaption>Exécution du script sur un échantillon de fichiers XML.</figcaption>
+      </figure>
+    </div>
+  </section>
+</Layout>

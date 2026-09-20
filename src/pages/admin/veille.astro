@@ -1,0 +1,164 @@
+---
+import Layout from "../../layouts/Layout.astro";
+---
+
+<Layout title="Back office — Veille" description="Outil local d'administration des articles de veille.">
+  <section class="section">
+    <div class="container">
+      <div class="page-header">
+        <span class="section-label mono">Outil local</span>
+        <h2>Back office — Veille</h2>
+        <p class="prose" style="margin-top: 16px;">
+          Cette page n'est pas liée dans le menu public. Elle communique avec un petit serveur local qui écrit
+          directement dans <code>src/data/veille.json</code>. Lance-le dans un terminal avec
+          <code>npm run admin</code>, puis recharge cette page.
+        </p>
+      </div>
+
+      <p class="form-status" id="server-status"></p>
+
+      <form class="admin-form" id="veille-form">
+        <div class="form-row">
+          <div class="form-field">
+            <label for="title">Titre *</label>
+            <input type="text" id="title" name="title" required />
+          </div>
+          <div class="form-field">
+            <label for="url">URL *</label>
+            <input type="url" id="url" name="url" required placeholder="https://..." />
+          </div>
+        </div>
+        <div class="form-row">
+          <div class="form-field">
+            <label for="source">Source</label>
+            <input type="text" id="source" name="source" placeholder="Ex : MDN, Le Monde Informatique..." />
+          </div>
+          <div class="form-field">
+            <label for="category">Catégorie</label>
+            <input type="text" id="category" name="category" placeholder="Ex : Cybersécurité, IA, Dev web..." />
+          </div>
+          <div class="form-field">
+            <label for="date">Date</label>
+            <input type="date" id="date" name="date" />
+          </div>
+        </div>
+        <div class="form-field">
+          <label for="summary">Résumé / notes</label>
+          <textarea id="summary" name="summary" rows="3"></textarea>
+        </div>
+        <p class="form-status" id="form-message"></p>
+        <button type="submit" class="btn btn-primary">Ajouter l'article</button>
+      </form>
+
+      <h3 class="mono" style="color: var(--text-primary); margin-bottom: 16px;">Articles enregistrés</h3>
+      <div id="veille-list"></div>
+    </div>
+  </section>
+</Layout>
+
+<script>
+  const API_BASE = "http://localhost:4322";
+
+  const statusEl = document.getElementById("server-status") as HTMLParagraphElement;
+  const messageEl = document.getElementById("form-message") as HTMLParagraphElement;
+  const listEl = document.getElementById("veille-list") as HTMLDivElement;
+  const form = document.getElementById("veille-form") as HTMLFormElement;
+
+  function setStatus(el: HTMLElement, text: string, kind: "success" | "error" | "") {
+    el.textContent = text;
+    el.className = "form-status" + (kind ? ` ${kind}` : "");
+  }
+
+  interface VeilleArticle {
+    id: string;
+    title: string;
+    url: string;
+    source?: string;
+    category?: string;
+    date?: string;
+    summary?: string;
+  }
+
+  function renderList(articles: VeilleArticle[]) {
+    if (articles.length === 0) {
+      listEl.innerHTML = '<p class="prose">Aucun article enregistré pour le moment.</p>';
+      return;
+    }
+    listEl.innerHTML = "";
+    articles.forEach((article) => {
+      const item = document.createElement("div");
+      item.className = "admin-item";
+      item.innerHTML = `
+        <div class="admin-item-body">
+          <h4>${escapeHtml(article.title)}</h4>
+          <div class="admin-item-meta">${escapeHtml([article.source, article.category, article.date].filter(Boolean).join(" · "))}</div>
+          ${article.summary ? `<div class="admin-item-summary">${escapeHtml(article.summary)}</div>` : ""}
+        </div>
+      `;
+      const deleteBtn = document.createElement("button");
+      deleteBtn.className = "btn btn-ghost";
+      deleteBtn.textContent = "Supprimer";
+      deleteBtn.addEventListener("click", () => deleteArticle(article.id));
+      item.appendChild(deleteBtn);
+      listEl.appendChild(item);
+    });
+  }
+
+  function escapeHtml(str: string) {
+    const div = document.createElement("div");
+    div.textContent = str;
+    return div.innerHTML;
+  }
+
+  async function loadArticles() {
+    try {
+      const res = await fetch(`${API_BASE}/api/veille`);
+      if (!res.ok) throw new Error();
+      const articles = await res.json();
+      setStatus(statusEl, "Connecté au serveur local.", "success");
+      renderList(articles);
+    } catch {
+      setStatus(
+        statusEl,
+        "Serveur local injoignable — lance « npm run admin » dans un terminal, puis recharge la page.",
+        "error"
+      );
+      listEl.innerHTML = "";
+    }
+  }
+
+  async function deleteArticle(id: string) {
+    try {
+      const res = await fetch(`${API_BASE}/api/veille/${id}`, { method: "DELETE" });
+      if (!res.ok) throw new Error();
+      await loadArticles();
+    } catch {
+      setStatus(messageEl, "Impossible de supprimer l'article.", "error");
+    }
+  }
+
+  form.addEventListener("submit", async (e) => {
+    e.preventDefault();
+    const formData = new FormData(form);
+    const payload = Object.fromEntries(formData.entries());
+
+    try {
+      const res = await fetch(`${API_BASE}/api/veille`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(payload),
+      });
+      if (!res.ok) {
+        const data = await res.json().catch(() => ({}));
+        throw new Error(data.error || "Erreur lors de l'ajout.");
+      }
+      form.reset();
+      setStatus(messageEl, "Article ajouté.", "success");
+      await loadArticles();
+    } catch (err) {
+      setStatus(messageEl, err instanceof Error ? err.message : "Erreur lors de l'ajout.", "error");
+    }
+  });
+
+  loadArticles();
+</script>

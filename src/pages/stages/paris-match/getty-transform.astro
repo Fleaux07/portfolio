@@ -1,0 +1,86 @@
+---
+import Layout from "../../../layouts/Layout.astro";
+import { withBase } from "../../../lib/url";
+---
+
+<Layout title="GettyTransform — Stage Paris Match" description="Outil Python d'automatisation du traitement des exports Getty Images, développé pendant le stage chez Paris Match.">
+  <section class="section">
+    <div class="container">
+      <a href={withBase("/stages/paris-match")} class="breadcrumb">← Retour au stage Paris Match</a>
+      <div class="page-header">
+        <span class="section-label mono">Mission — Paris Match</span>
+        <h2>GettyTransform</h2>
+      </div>
+
+      <div class="prose">
+        <p>
+          GettyTransform est un outil développé en Python dans le cadre d'un besoin interne exprimé par <strong>Thierry</strong>, responsable du projet. Il s'adresse à <strong>Yasmina</strong>, utilisatrice
+          finale non technique, et a pour objectif d'automatiser un traitement de transformation sur des fichiers
+          texte tabulés exportés depuis la plateforme Getty Images.
+        </p>
+        <p>
+          Concrètement, l'outil permet à l'utilisateur de sélectionner un fichier d'export Getty (.txt) directement
+          depuis son poste, de le valider structurellement (vérification des colonnes et du séparateur), puis
+          d'appliquer une série de transformations automatisées : suppression des lignes à royaltys nulles,
+          recalcul des royaltys pour les ventes américaines, normalisation des références d'assets, et
+          uniformisation des séparateurs décimaux. En sortie, deux fichiers sont générés automatiquement : un
+          fichier TXT tabulé et un fichier Excel, tous deux horodatés.
+        </p>
+        <p>
+          Les deux principales contraintes du projet étaient de proposer une interface simple et accessible à un
+          utilisateur non technique, et de permettre une installation sans droits administrateur sur le poste de
+          travail.
+        </p>
+        <p>
+          L'environnement technologique pour ce projet était Python comme langage, avec la librairie <strong>Pandas</strong> (pour générer une interface graphique simple d'utilisation) et <strong>Openpyxl</strong> (pour générer le fichier Excel en sortie).
+        </p>
+      </div>
+
+      <div class="tag-list" style="margin-bottom: 32px;">
+        <span class="tag">Python</span>
+        <span class="tag">Pandas</span>
+        <span class="tag">Openpyxl</span>
+      </div>
+
+      <h3 class="mono" style="color: var(--text-primary); margin-bottom: 16px;">Utilisation imagée de l'outil</h3>
+
+      <figure class="stage-figure">
+        <img src={withBase("/images/stages/paris-match/getty-interface.jpg")} alt="Interface principale de GettyTransform" loading="lazy" />
+        <figcaption>Interface principale de l'outil.</figcaption>
+      </figure>
+
+      <div class="prose">
+        <p>Après avoir cliqué sur « Parcourir », cette fenêtre s'ouvre et demande de choisir le fichier texte tabulé.</p>
+      </div>
+
+      <figure class="stage-figure">
+        <img src={withBase("/images/stages/paris-match/getty-selection-fichier.jpg")} alt="Fenêtre de sélection du fichier Getty Export" loading="lazy" />
+        <figcaption>Sélection du fichier d'export Getty (.txt) à traiter.</figcaption>
+      </figure>
+
+      <figure class="stage-figure">
+        <img src={withBase("/images/stages/paris-match/getty-extrait-texte-tabule.jpg")} alt="Extrait d'un fichier texte tabulé Getty" loading="lazy" />
+        <figcaption>Extrait d'un fichier texte tabulé, tel qu'exporté depuis Getty Images.</figcaption>
+      </figure>
+
+      <div class="prose">
+        <p>
+          Nous cliquons ensuite sur « Ouvrir », ce qui importe le fichier, puis sur « Lancer le traitement ». Un
+          sous-répertoire se crée et enregistre le fichier texte pour l'envoi sur Getty, ainsi qu'un fichier Excel
+          permettant à l'utilisateur de consulter lui-même les changements appliqués.
+        </p>
+      </div>
+
+      <div class="stage-figure-row">
+        <figure class="stage-figure">
+          <img src={withBase("/images/stages/paris-match/getty-traitement-termine.jpg")} alt="Traitement terminé avec statistiques" loading="lazy" />
+          <figcaption>Traitement terminé — statistiques des lignes traitées.</figcaption>
+        </figure>
+        <figure class="stage-figure">
+          <img src={withBase("/images/stages/paris-match/getty-fichiers-generes.jpg")} alt="Fichiers TXT et Excel générés" loading="lazy" />
+          <figcaption>Les deux fichiers générés : TXT tabulé et Excel, tous deux horodatés.</figcaption>
+        </figure>
+      </div>
+    </div>
+  </section>
+</Layout>

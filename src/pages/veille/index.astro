@@ -1,0 +1,50 @@
+---
+import Layout from "../../layouts/Layout.astro";
+import articles from "../../data/veille.json";
+
+interface VeilleArticle {
+  id: string;
+  title: string;
+  url: string;
+  source?: string;
+  category?: string;
+  date?: string;
+  summary?: string;
+}
+
+const sorted = [...(articles as VeilleArticle[])].sort((a, b) => (a.date ?? "") < (b.date ?? "") ? 1 : -1);
+---
+
+<Layout title="Veille" description="Veille technologique de Romain Boucourt.">
+  <section class="section">
+    <div class="container">
+      <div class="page-header">
+        <span class="section-label mono">Veille</span>
+        <h2>Veille technologique</h2>
+      </div>
+
+      {
+        sorted.length === 0 ? (
+          <div class="placeholder-box">
+            <p class="mono">Aucun article pour le moment — à compléter.</p>
+          </div>
+        ) : (
+          <div class="card-grid">
+            {sorted.map((article) => (
+              <a href={article.url} target="_blank" rel="noopener noreferrer" class="link-card">
+                {article.category && <span class="tag" style="margin-bottom: 12px; display: inline-block;">{article.category}</span>}
+                <h3>{article.title}</h3>
+                <span class="card-date">
+                  {article.source ? `${article.source} — ` : ""}
+                  {article.date}
+                </span>
+                {article.summary && <span class="card-summary">{article.summary}</span>}
+                <span class="card-cta">Lire l'article →</span>
+              </a>
+            ))}
+          </div>
+        )
+      }
+    </div>
+  </section>
+</Layout>

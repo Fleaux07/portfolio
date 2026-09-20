@@ -1,5 +1,6 @@
 ---
 import Nav from "../components/Nav.astro";
+import { withBase } from "../lib/url";
 import "../styles/global.css";
 
 interface Props {
@@ -16,7 +17,7 @@ const { title, description = "Portfolio BTS SIO SLAM de Romain Boucourt." } = As
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <meta name="description" content={description} />
-    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    <link rel="icon" type="image/svg+xml" href={withBase("/favicon.svg")} />
     <title>{title} — Portfolio BTS SIO SLAM</title>
 
     <link rel="preconnect" href="https://fonts.googleapis.com" />
@@ -34,5 +35,58 @@ const { title, description = "Portfolio BTS SIO SLAM de Romain Boucourt." } = As
     <footer class="footer">
       <p class="mono">Portfolio BTS SIO SLAM — Romain Boucourt</p>
     </footer>
+
+    <div class="lightbox-overlay" id="lightbox">
+      <img class="lightbox-img" alt="" />
+    </div>
+
+    <script>
+      const overlay = document.getElementById("lightbox");
+      const overlayImg = overlay?.querySelector("img");
+
+      function openLightbox(src: string, alt: string) {
+        if (!overlay || !overlayImg) return;
+        overlayImg.setAttribute("src", src);
+        overlayImg.setAttribute("alt", alt);
+        overlay.classList.add("open");
+        document.body.style.overflow = "hidden";
+      }
+
+      function closeLightbox() {
+        if (!overlay) return;
+        overlay.classList.remove("open");
+        document.body.style.overflow = "";
+      }
+
+      overlay?.addEventListener("click", closeLightbox);
+      overlayImg?.addEventListener("click", (e) => e.stopPropagation());
+      document.addEventListener("keydown", (e) => {
+        if (e.key === "Escape") closeLightbox();
+      });
+
+      document.querySelectorAll("main img").forEach((img) => {
+        img.classList.add("zoomable");
+        img.setAttribute("role", "button");
+        img.setAttribute("tabindex", "0");
+
+        const trigger = () => {
+          const src = img.getAttribute("src") || "";
+          const alt = img.getAttribute("alt") || "";
+          openLightbox(src, alt);
+        };
+
+        img.addEventListener("click", (e) => {
+          e.stopPropagation();
+          trigger();
+        });
+        img.addEventListener("keydown", (e) => {
+          const key = (e as KeyboardEvent).key;
+          if (key === "Enter" || key === " ") {
+            e.preventDefault();
+            trigger();
+          }
+        });
+      });
+    </script>
   </body>
 </html>

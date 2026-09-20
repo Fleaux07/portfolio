@@ -7,6 +7,6 @@ export const NAV_ITEMS: NavItem[] = [
   { label: "CV", href: "/" },
   { label: "Réalisations" },
   { label: "Stages", href: "/stages" },
-  { label: "Veille" },
+  { label: "Veille", href: "/veille" },
   { label: "Rectorat" },
 ];

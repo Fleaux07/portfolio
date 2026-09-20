@@ -1,0 +1,105 @@
+---
+import Layout from "../../../layouts/Layout.astro";
+import { withBase } from "../../../lib/url";
+---
+
+<Layout title="Régénération BNF — Stage Paris Match" description="Régénération par IA des fichiers XML d'archives Paris Match scannées par la BNF.">
+  <section class="section">
+    <div class="container">
+      <a href={withBase("/stages/paris-match")} class="breadcrumb">← Retour au stage Paris Match</a>
+      <div class="page-header">
+        <span class="section-label mono">Mission — Paris Match</span>
+        <h2>Projet de régénération des fichiers de la BNF</h2>
+      </div>
+
+      <div class="prose">
+        <p>
+          La BNF (Bibliothèque Nationale de France) a scanné des archives de Paris Match pour en générer des
+          fichiers PDF et des fichiers XML (un fichier XML par article). Le travail de la BNF a cependant été
+          manqué : l'OCR (la reconnaissance de texte sur une image) des PDF a mal fonctionné, et le texte comportait
+          beaucoup d'erreurs. Le but de ce projet était donc de régénérer les fichiers XML à l'aide de l'IA pour
+          générer le texte, à partir des PDF défectueux fournis par la BNF.
+        </p>
+        <p>
+          Pour développer mon traitement, j'ai travaillé dans l'environnement de développement <strong>Google Colab</strong>, qui permet de séparer le code en plusieurs blocs — pratique pour le
+          débogage, puisqu'on peut exécuter une partie du code sans tout relancer. Colab permet aussi de développer
+          directement dans le cloud de Google, ce qui donne accès à la fonctionnalité <strong>Vertex AI</strong>. Le
+          langage utilisé est Python : pratique pour appeler des API d'IA, et déjà présent nativement sur Google
+          Colab. Cela permet d'intégrer facilement un modèle d'IA dans le traitement, et d'en changer facilement en
+          cours de développement.
+        </p>
+        <p>
+          Le but de l'outil est de déposer sur le cloud un répertoire de magazine contenant des fichiers PDF et XML
+          défectueux. L'IA relie ensuite les fichiers et, à l'aide d'un prompt, corrige et remet au nouveau format
+          les XML selon les nouvelles conventions.
+        </p>
+      </div>
+
+      <div class="tag-list" style="margin-bottom: 32px;">
+        <span class="tag">Python</span>
+        <span class="tag">Google Colab</span>
+        <span class="tag">Vertex AI</span>
+      </div>
+
+      <figure class="stage-figure">
+        <img src={withBase("/images/stages/paris-match/bnf-log-traitement.jpg")} alt="Log du traitement BNF" loading="lazy" />
+        <figcaption>Log de traitement : fichiers XML générés, et détection d'une erreur de parsing sur l'article 5.</figcaption>
+      </figure>
+
+      <h3 class="mono" style="color: var(--text-primary); margin: 40px 0 16px;">Erreurs rencontrées</h3>
+
+      <div class="prose">
+        <p>
+          <strong>Balise inattendue et non fermée.</strong> Cette erreur a été générée parce qu'un fichier XML avait
+          une balise en trop, qui de plus n'était pas fermée. Cette balise n'était pas censée être générée, ce qui
+          provoquait une erreur dans le découpage des différents fichiers XML. Pour la corriger, j'ai ajouté une
+          fonction qui récupère l'erreur et remplace la mauvaise balise par une bonne balise.
+        </p>
+      </div>
+
+      <div class="stage-figure-row">
+        <figure class="stage-figure">
+          <img src={withBase("/images/stages/paris-match/bnf-xml-balise-inattendue.jpg")} alt="Balise XML inattendue" loading="lazy" />
+          <figcaption>Balise « &lt;/text&gt; » inattendue, générée par erreur.</figcaption>
+        </figure>
+        <figure class="stage-figure">
+          <img src={withBase("/images/stages/paris-match/bnf-fonction-corr-err-02.jpg")} alt="Fonction CORR_ERR_02" loading="lazy" />
+          <figcaption>Fonction CORR_ERR_02, qui corrige les balises inattendues.</figcaption>
+        </figure>
+      </div>
+
+      <div class="prose">
+        <p>
+          <strong>Doublons de noms de fichiers.</strong> À cause de la convention de nommage utilisée, certains
+          fichiers généraient le même nom lors de la génération. J'ai donc décidé d'ajouter un suffixe numéroté à
+          mes fichiers.
+        </p>
+      </div>
+
+      <figure class="stage-figure">
+        <img src={withBase("/images/stages/paris-match/bnf-gestion-doublons.jpg")} alt="Gestion des doublons de noms de fichiers" loading="lazy" />
+        <figcaption>Gestion des doublons : ajout d'un suffixe numéroté au nom de fichier (ERR-01).</figcaption>
+      </figure>
+
+      <div class="prose">
+        <p>
+          <strong>Balise Auteur.</strong> Dans la convention de la PQHN, la balise Auteur devait être au format
+          « vrac » : tous les auteurs réunis dans une même balise, séparés par un point-virgule. Or l'IA la
+          générait parfois au format « pn », créant une balise différente par auteur. J'ai donc créé un script qui
+          corrige cette erreur.
+        </p>
+      </div>
+
+      <div class="stage-figure-row">
+        <figure class="stage-figure">
+          <img src={withBase("/images/stages/paris-match/bnf-log-balise-auteur.jpg")} alt="Log de correction de la balise auteur" loading="lazy" />
+          <figcaption>Correction du type de balise auteur, de « PN » vers « VRAC ».</figcaption>
+        </figure>
+        <figure class="stage-figure">
+          <img src={withBase("/images/stages/paris-match/bnf-fonction-corr-err-06.jpg")} alt="Fonction CORR_ERR_06" loading="lazy" />
+          <figcaption>Fonction CORR_ERR_06, qui corrige le type d'auteur et fusionne les balises &lt;AUTEUR&gt; multiples.</figcaption>
+        </figure>
+      </div>
+    </div>
+  </section>
+</Layout>

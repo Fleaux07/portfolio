@@ -1,0 +1,132 @@
+---
+import Layout from "../../../layouts/Layout.astro";
+import CodeIcon from "../../../components/icons/CodeIcon.astro";
+import { STAGE_INFO, LOGICIELS, SECURITE, MATERIEL, ACTIVITIES } from "../../../data/parisMatch";
+import { withBase } from "../../../lib/url";
+---
+
+<Layout title="Stage — Paris Match" description="Contexte, environnement technologique et missions du stage effectué chez Paris Match.">
+  <section class="section">
+    <div class="container">
+      <a href={withBase("/stages")} class="breadcrumb">← Retour aux stages</a>
+      <div class="page-header">
+        <span class="section-label mono">Stages</span>
+        <h2>Stage — Paris Match</h2>
+        <span class="dates">{STAGE_INFO.dates}</span>
+      </div>
+
+      <div class="subsection">
+        <h3 class="mono">Contexte</h3>
+        <div class="prose">
+          <p>
+            J'ai effectué mon stage de première année du <strong>26/05/2026 au 26/06/2026</strong> à Paris Match.
+            Paris Match est un journal hebdomadaire créé en 1949, avec sa devise culte « le poids des mots, le choc
+            des photos ». Le journal fait aujourd'hui partie du groupe de luxe LVMH (Moët Hennessy Louis Vuitton) et
+            reste l'entreprise numéro 1 sur son marché.
+          </p>
+          <p>
+            J'ai été affecté au service de la <strong>Doc-Texte</strong>, chargé de la gestion des fichiers PDF et
+            XML que je traite au quotidien.
+          </p>
+        </div>
+        <figure class="stage-figure">
+          <img src={withBase("/images/stages/paris-match/entreprise-organigramme.jpg")} alt="Organigramme de Paris Match" loading="lazy" />
+          <figcaption>Organigramme de Paris Match — le service Doc-Texte est rattaché à Héritage et Patrimoine.</figcaption>
+        </figure>
+      </div>
+    </div>
+  </section>
+
+  <section class="section tinted">
+    <div class="container">
+      <span class="section-label mono">Environnement</span>
+      <h2>Environnement technologique</h2>
+
+      <div class="subsection">
+        <h3 class="mono">Logiciels</h3>
+        <div class="info-card-grid">
+          {
+            LOGICIELS.map((item) => (
+              <div class="info-card">
+                <h4>{item.name}</h4>
+                <p>{item.description}</p>
+                {item.image && <img src={withBase(item.image)} alt={item.name} loading="lazy" />}
+              </div>
+            ))
+          }
+        </div>
+      </div>
+
+      <div class="subsection">
+        <h3 class="mono">Sécurité</h3>
+        <div class="info-card-grid">
+          {
+            SECURITE.map((item) => (
+              <div class="info-card">
+                <h4>{item.name}</h4>
+                <p>{item.description}</p>
+              </div>
+            ))
+          }
+        </div>
+      </div>
+
+      <div class="subsection">
+        <h3 class="mono">Matériel de l'entreprise</h3>
+        <div class="photo-card-grid">
+          {
+            MATERIEL.map((item) => (
+              <div class="photo-card">
+                <img src={withBase(item.image)} alt={item.title} loading="lazy" />
+                <div class="photo-card-body">
+                  <h4>{item.title}</h4>
+                  <p>{item.description}</p>
+                </div>
+              </div>
+            ))
+          }
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="section">
+    <div class="container">
+      <span class="section-label mono">Organisation</span>
+      <h2>Organisation du projet</h2>
+      <div class="prose">
+        <p>
+          Le mode de transmission utilisé est <strong>Teams</strong>, c'est également sur cet outil que sont
+          organisées les réunions. L'outil d'organisation du projet est <strong>Jira</strong>, avec lequel je peux
+          organiser mon travail sous forme de tickets et les déplacer entre les rubriques « à faire », « en cours »
+          et « terminé » pour me rendre compte de mon avancement. Je rédige ma spécification technique sur Word.
+        </p>
+      </div>
+      <figure class="stage-figure">
+        <img src={withBase("/images/stages/paris-match/organisation-planning-teams.jpg")} alt="Planning de réunion sur Teams" loading="lazy" />
+        <figcaption>Exemple de planning de réunion, semaine du 8 au 12 juin.</figcaption>
+      </figure>
+    </div>
+  </section>
+
+  <section class="section tinted">
+    <div class="container">
+      <span class="section-label mono">Missions</span>
+      <h2>Mes trois activités</h2>
+      <div class="card-grid">
+        {
+          ACTIVITIES.map((activity) => (
+            <a href={withBase(`/stages/paris-match/${activity.slug}`)} class="link-card activity-card">
+              <span class="icon-frame">
+                <CodeIcon />
+              </span>
+              <h3>{activity.title}</h3>
+              <span class="card-summary">{activity.summary}</span>
+              <span class="card-cta">Voir le détail →</span>
+            </a>
+          ))
+        }
+      </div>
+    </div>
+  </section>
+</Layout>
